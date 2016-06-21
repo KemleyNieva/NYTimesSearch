@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by kemleynieva on 6/20/16.
  */
-public class ArticleArrayAdapter extends ArrayAdapter<Article>{
+public class ArticleArrayAdapter extends ArrayAdapter<Article> {
     public ArticleArrayAdapter(Context context, List<Article> articles){
         super(context,android.R.layout.simple_list_item_1,articles);
 

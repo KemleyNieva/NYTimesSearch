@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +20,9 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.codepath.nytimessearch.Article;
+import com.codepath.nytimessearch.ArticleAdapter;
 import com.codepath.nytimessearch.ArticleArrayAdapter;
+import com.codepath.nytimessearch.EndlessRecyclerViewScrollListener;
 import com.codepath.nytimessearch.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -39,7 +43,8 @@ public class SearchActivity extends AppCompatActivity {
     Button btnSearch;
 
     ArrayList<Article> articles;
-    ArticleArrayAdapter adapter;
+    ArticleAdapter adapter;
+    //ArticleArrayAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +58,25 @@ public class SearchActivity extends AppCompatActivity {
         gvResults = (GridView) findViewById(R.id.gvResults);
         btnSearch =(Button) findViewById(R.id.btnSearch);
 
-        articles= new ArrayList<>();
-        adapter = new ArticleArrayAdapter(this,articles);
-        gvResults.setAdapter(adapter);
+        // Lookup the recyclerview in activity layout
+        RecyclerView rvArticles = (RecyclerView) findViewById(R.id.rvArticles);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        //hoop up listener
+        // Initialize contacts
+        articles = new ArrayList<>();
+        adapter = new ArticleAdapter(this,articles);
+        rvArticles.setAdapter(adapter);
+        rvArticles.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+
+        rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                customLoadMoreDataFromApi(page);
+            }
+        });
+
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +92,32 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    // Append more data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void customLoadMoreDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate data using the offset value as a parameter.
+        // Deserialize API response and then construct new objects to append to the adapter
+        // Add the new objects to the data source for the adapter
+        articles.addAll(articles);
+        // For efficiency purposes, notify the adapter of only the elements that got changed
+        // curSize will equal to the index of the first element inserted because the list is 0-indexed
+        int curSize = adapter.getItemCount();
+        adapter.notifyItemRangeInserted(curSize, articles.size() - 1);
+    }
+        /*// Create adapter passing in the sample user data
+        adapter = new ArticleAdapter(this,articles);
+        // Attach the adapter to the recyclerview to populate items
+        rvArticles.setAdapter(adapter);
+        // Set layout manager to position the items
+
+        //articles= new ArrayList<>();
+        //adapter = new ArticleArrayAdapter(this,articles);
+        //gvResults.setAdapter(adapter);*/
+
+        //hoop up listener
 
 
     @Override
@@ -116,9 +161,9 @@ public class SearchActivity extends AppCompatActivity {
                 JSONArray articleJsonResults = null;
                 try{
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                    adapter.addAll(Article.fromJSONArray(articleJsonResults));
-                    //adapter.notifyDataSetChanged();
-                    Log.d("SearchActivity",articles.toString());
+                    articles.addAll(Article.fromJSONArray(articleJsonResults));
+                    adapter.notifyItemInserted(0);
+                    //Log.d("SearchActivity",articles.toString());
 
                 }catch(JSONException e){
                     e.printStackTrace();
