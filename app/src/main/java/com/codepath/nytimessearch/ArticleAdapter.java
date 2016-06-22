@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -21,9 +22,14 @@ import java.util.List;
  * Created by kemleynieva on 6/21/16.
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
+
+    public void clearAll() {
+        mArticles = new ArrayList<>();
+    }
+
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder  {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         //public TextView nameTextView;
@@ -46,6 +52,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
 
         }
+
+
     }
 
     //private List<Article> mContacts;
@@ -84,21 +92,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(ArticleAdapter.ViewHolder viewHolder, int position) {
-        // Get the data model based on position
+
         Article article = mArticles.get(position);
 
-        // Set item views based on the data model
-        //find the image view
         ImageView imageView = viewHolder.imageView;
-        //clear out recucled image from convertView from last time
         imageView.setImageResource(0);
 
         TextView tvTitle = viewHolder.tvTitle;
         tvTitle.setText(article.getHeadlines());
 
-
-        //populate the thumbnail image
-        //remote download the image in the background
         String thumbnail = article.getThumbnail();
 
         if(!TextUtils.isEmpty(thumbnail)){
