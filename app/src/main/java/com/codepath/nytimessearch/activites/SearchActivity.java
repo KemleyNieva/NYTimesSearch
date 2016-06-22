@@ -58,13 +58,14 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupViews();
+
     }
     public void setupViews() {
         //etQuery = (EditText) findViewById(R.id.etQuery);
         //btnSearch = (Button) findViewById(R.id.btnSearch);
 
        rvArticles = (RecyclerView) findViewById(R.id.rvArticles);
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
 
         // Initialize contacts
         articles = new ArrayList<>();
@@ -80,6 +81,20 @@ public class SearchActivity extends AppCompatActivity {
             public void onLoadMore(int page, int totalItemsCount) {
                 loadpage(page);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        ItemClickSupport.addTo(rvArticles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                //create on intent to display the article
+                Intent i = new Intent(getApplicationContext(),ArticleActivity.class);
+                //get article to display
+                Article article =articles.get(position);
+                //pass
+                i.putExtra("article",article);
+                //launch
+                startActivity(i);
             }
         });
     }
@@ -134,19 +149,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
-    /*ItemClickSupport.addTo(rvArticles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-        @Override
-        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-            //create on intent to display the article
-                Intent i = new Intent(getApplicationContext(),ArticleActivity.class);
-                //get article to display
-                Article article =articles.get(position);
-                //pass
-                i.putExtra("article",article);
-                //launch
-                startActivity(i);
-        }
-    });*/
+
 
 
 

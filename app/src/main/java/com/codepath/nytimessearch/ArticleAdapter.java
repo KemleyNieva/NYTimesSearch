@@ -104,7 +104,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         String thumbnail = article.getThumbnail();
 
         if(!TextUtils.isEmpty(thumbnail)){
-            Picasso.with(getContext()).load(thumbnail).into(imageView);
+            Picasso.with(getContext()).load(thumbnail).placeholder(R.drawable.ic_action_name).fit().into(imageView);
+        }
+        else{
+            Picasso.with(getContext()).load(R.mipmap.ic_placehold).fit().into(imageView);
         }
 
 
