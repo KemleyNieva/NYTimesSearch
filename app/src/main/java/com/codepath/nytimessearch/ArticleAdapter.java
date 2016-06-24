@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -104,10 +105,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         String thumbnail = article.getThumbnail();
 
         if(!TextUtils.isEmpty(thumbnail)){
-            Picasso.with(getContext()).load(thumbnail).placeholder(R.drawable.ic_action_name).fit().into(imageView);
+            Glide.with(getContext()).load(thumbnail).placeholder(R.drawable.ic_action_name).fitCenter().into(imageView);
         }
         else{
-            Picasso.with(getContext()).load(R.mipmap.ic_placehold).fit().into(imageView);
+            Glide.with(getContext()).load(R.mipmap.ic_placehold).fitCenter().into(imageView);
         }
 
 
@@ -117,6 +118,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     // Return the total count of items
     @Override
     public int getItemCount() {
-        return mArticles.size();
+        if(mArticles != null) {
+            return mArticles.size();
+        }
+        else{
+            return 0;
+        }
     }
 }
