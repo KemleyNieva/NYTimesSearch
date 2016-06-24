@@ -105,11 +105,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         String thumbnail = article.getThumbnail();
 
-        if(!TextUtils.isEmpty(thumbnail)){
-            Glide.with(getContext()).load(thumbnail).placeholder(R.drawable.ic_action_name).fitCenter().into(imageView);
+        if(tvTitle != null) {
+
+            if (!TextUtils.isEmpty(thumbnail)) {
+                Glide.with(getContext()).load(thumbnail).placeholder(R.drawable.ic_action_name).fitCenter().into(imageView);
+            } else {
+                Glide.with(getContext()).load(R.mipmap.ic_placehold).fitCenter().into(imageView);
+            }
         }
         else{
-            Glide.with(getContext()).load(R.mipmap.ic_placehold).fitCenter().into(imageView);
+
         }
 
 

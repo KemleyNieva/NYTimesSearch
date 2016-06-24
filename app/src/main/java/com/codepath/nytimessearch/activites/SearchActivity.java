@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
         rvArticles.setAdapter(adapter);
         rvArticles.setLayoutManager(staggeredGridLayoutManager);
 
-        onArticleSearch();
+        loadpage(0);
 
         rvArticles.clearOnScrollListeners();
         rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
@@ -208,7 +208,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
                 adapter.clearAll();
-               //adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 return true;
             }
 
