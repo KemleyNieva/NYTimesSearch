@@ -25,7 +25,8 @@ import java.util.List;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
     public void clearAll() {
-        mArticles = new ArrayList<>();
+        mArticles.clear();
+        notifyDataSetChanged();
     }
 
     // Provide a direct reference to each of the views within a data item

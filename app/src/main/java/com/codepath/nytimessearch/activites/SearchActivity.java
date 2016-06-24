@@ -55,6 +55,7 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<Article> articles;
     ArticleAdapter adapter;
     StaggeredGridLayoutManager staggeredGridLayoutManager;
+    String search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class SearchActivity extends AppCompatActivity {
         rvArticles.setLayoutManager(staggeredGridLayoutManager);
 
         onArticleSearch();
-
 
         rvArticles.clearOnScrollListeners();
         rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
@@ -124,7 +124,7 @@ public class SearchActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("api-key","227c750bb7714fc39ef1559ef1bd8329");
         params.put("page",page);
-        //params.put("q",query);
+        params.put("q",search);
 
         client.get(url, params, new JsonHttpResponseHandler(){
             @Override
@@ -176,6 +176,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // perform query here
+                search = query;
                 //Toast.makeText(this,"Searching for" + query, Toast.LENGTH_LONG).show();
                 AsyncHttpClient client = new AsyncHttpClient();
                 String url ="http://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -183,7 +184,7 @@ public class SearchActivity extends AppCompatActivity {
                 RequestParams params = new RequestParams();
                 params.put("api-key","227c750bb7714fc39ef1559ef1bd8329");
                 params.put("page",0);
-                params.put("q",query);
+                params.put("q",search);
 
                 client.get(url, params, new JsonHttpResponseHandler(){
                     @Override
@@ -206,6 +207,7 @@ public class SearchActivity extends AppCompatActivity {
                         Log.d("SearchActivity", "onFailure onCreateOptions");
                     }
                 });
+                adapter.clearAll();
                //adapter.notifyDataSetChanged();
                 return true;
             }
